@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { deleteDoc, doc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
-import { db } from "../../firebase/firebase_config";
-import { handleEventDelete } from "../Dashboard/dashboardSlice";
+import { db } from "../../../firebase/firebase_config";
+import { handleEventDelete } from "../dashboardSlice";
+import Link from "next/link";
 
 const EventCard = ({ event }) => {
-  const { id, eventName, eventLocation, timeDuration } = event;
+  const { id, eventName, eventLocation, timeDuration, createdAt } = event;
   const [isDeleting, setIsDeleting] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state: any) => state.auth_user);
@@ -21,13 +22,7 @@ const EventCard = ({ event }) => {
     if (window.confirm("Do you want to delete?")) {
       setIsDeleting(true);
       try {
-        const eventRef = doc(
-          db,
-          "events",
-          user?.user_name.concat(user?.token),
-          "event_list",
-          id
-        );
+        const eventRef = doc(db, "events", user?.uid, "event_list", id);
         await deleteDoc(eventRef);
         dispatch(handleEventDelete(id));
         setIsDeleting(false);
@@ -42,6 +37,9 @@ const EventCard = ({ event }) => {
     <div className="col-sm-6 col-md-3">
       <div className="card">
         <div className="card-body">
+          <Link href={`booking/${id}`} target="_blank">
+            <span className="card-link mb-3 d-block">Event preview</span>
+          </Link>
           <h5 className="card-title">{eventName}</h5>
           <p className="card-text">{eventLocation ? eventLocation : ""}</p>
           <p className="card-text">{timeLength(timeDuration)}</p>

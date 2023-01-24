@@ -25,3 +25,54 @@
 ._ant_week_checkbox .ant-checkbox-wrapper::after {
   content: '';
 }
+
+._avail_time_box {
+  min-width: 250px;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+._avail_time_box._active>._avail_time_btn {
+  width: 48%;
+}
+
+._avail_time_btn {
+  width: 100%;
+  transition: all 0.3s;
+}
+
+._avail_time_btn_confirm {
+  margin-left: 8px;
+}
+
+._calendar_right {
+  max-height: 60vh;
+  overflow-y: auto;
+  animation: come-left .2s linear;
+  transform-origin: right;
+}
+
+@keyframes come-left {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+    pointer-events: none;
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+    pointer-events: auto;
+  }
+}
+
+._calendar_active_date_dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: #3987ff;
+  border-radius: 50%;
+  position: relative;
+  top: 10px;
+  left: -5px;
+}

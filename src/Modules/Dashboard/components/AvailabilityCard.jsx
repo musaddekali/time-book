@@ -4,9 +4,9 @@ import { TimePicker, Tooltip, Checkbox} from "antd";
 const AvailabilityCard = () => {
   const [timeHour, setTimeHout] = useState("12");
   const [availableTime, setAvailableTime] = useState(null);
-  const CheckboxGroup = Checkbox.Group;
   const [selectedWeekDay, setSelectedWeekDay] = useState([]);
   const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const CheckboxGroup = Checkbox.Group;
 
   const toggleTimeHour = () => {
     if (timeHour === "12") {
@@ -17,13 +17,11 @@ const AvailabilityCard = () => {
   };
 
   const getAbailableTimeRange = (time, timeString) => {
-    // console.log(time, timeString);
     setAvailableTime(timeString);
   };
 
   const getAvailableWeekDays = (list) => {
     setSelectedWeekDay(list);
-    // console.log(list);
   };
 
   return (

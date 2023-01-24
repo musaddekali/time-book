@@ -7,13 +7,15 @@ const dashboardSlice = createSlice({
     isEventDataLoading: true,
   },
   reducers: {
-    handleCreateEventData: (state, action) => {
-      state.createdEventData = [action.payload, ...state.createdEventData];
+    setAllEventData: (state, action) => {
+      state.createdEventData = action.payload;
     },
     handleEventDataLoading: (state, action) => {
       state.isEventDataLoading = action.payload;
     },
-
+    setSingleEvent: (state, action) => {
+      state.createdEventData = [action.payload, ...state.createdEventData];
+    },
     handleEventDelete: (state, action) => {
       state.createdEventData = state.createdEventData.filter(
         (item) => item.id !== action.payload
@@ -23,11 +25,12 @@ const dashboardSlice = createSlice({
 });
 
 export const {
-  handleCreateEventData,
+  setAllEventData,
   handleEventDataLoading,
   handleEventDelete,
+  setSingleEvent,
 } = dashboardSlice.actions;
 
-// export const {selectCreateEventData} = useSelector((state : any) => state.dashboard);
+export const selectDashboard = (state: any) => state.dashboard;
 
 export default dashboardSlice.reducer;

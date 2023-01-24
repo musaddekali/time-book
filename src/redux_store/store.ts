@@ -1,6 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
+import { createWrapper } from "next-redux-wrapper";
 import authReducer from "../Modules/Auth/AuthSlice";
-import dashboardSlice from "../Modules/Dashboard/dashboardSlice";
+import dashboardReducer from "../Modules/Dashboard/dashboardSlice";
 
 // const ntificationSlice = () => ({
 //   name: "notification",
@@ -14,20 +15,40 @@ import dashboardSlice from "../Modules/Dashboard/dashboardSlice";
 //   },
 // })
 
+// const store = configureStore({
+//   reducer: {
+//     auth_user: authReducer,
+//     dashboard: dashboardSlice,
+//     // notification: ntificationSlice,
+//   },
+//   middleware: (getDefaultMiddleware) =>
+//     getDefaultMiddleware({
+//       serializableCheck: false,
+//     }),
+// });
 
-const store = configureStore({
-  reducer: {
-    auth_user: authReducer,
-    dashboard: dashboardSlice,
-    // notification: ntificationSlice,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }),
-});
+// export default store;
 
-export default store;
+const makeStore = () =>
+  configureStore({
+    reducer: {
+      auth_user: authReducer,
+      dashboard: dashboardReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false,
+      }),
+  });
 
-// Can still subscribe to the store
-// store.subscribe(() => console.log(store.getState()))
+export type AppStore = ReturnType<typeof makeStore>;
+export type AppState = ReturnType<AppStore["getState"]>;
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  AppState,
+  unknown,
+  Action
+>;
+
+export const wrapper = createWrapper<AppStore>(makeStore);
+
