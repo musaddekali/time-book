@@ -24,7 +24,7 @@ const useDashboard = () => {
   useEffect(() => {
     async function getAllEvents() {
       dispatch(handleEventDataLoading(true));
-      if (user.uid && !createdEventData.length) {
+      if (user.uid) {
         try {
           const eventsRef = query(
             collection(db, "events", user?.uid, "event_list"),

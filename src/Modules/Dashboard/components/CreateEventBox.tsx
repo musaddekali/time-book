@@ -27,17 +27,17 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
     "Saturday",
   ];
   const [selectedWeekDays, setSelectedWeekDays] = useState(weekDays);
-  const [timeHour, setTimeHout] = useState("12");
-  const [availableTime, setAvailableTime] = useState([
-    moment("10:00", "HH:mm").format("LT"),
-    moment("19:00", "HH:mm").format("LT"),
-  ]);
+  // const [availableTime, setAvailableTime] = useState([
+  //   moment("10:00", "HH:mm").format("LT"),
+  //   moment("19:00", "HH:mm").format("LT"),
+  // ]);
+  const [availableTime, setAvailableTime] = useState(["10.00 am", "7.00 pm"]);
   console.log("available time ", availableTime);
   // console.log('Day js', dayjs().format());
   // console.log('Moment js', moment().format('Lt'));
   console.log("available time am pm to 24h -> ", [
-    moment("10:00 am", ["h:mm A"]).format("HH:mm"),
-    moment("7:00 pm", ["h:mm A"]).format("HH:mm"),
+    moment(availableTime[0], ["h:mm A"]).format("HH:mm"),
+    moment(availableTime[1], ["h:mm A"]).format("HH:mm"),
   ]);
 
   useEffect(() => {
@@ -56,14 +56,6 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
     setSelectedWeekDays(list);
   };
 
-  const toggleTimeHour = () => {
-    if (timeHour === "12") {
-      setTimeHout("24");
-    } else if (timeHour === "24") {
-      setTimeHout("12");
-    }
-  };
-
   const getAbailableTimeRange = (time, timeString) => {
     setAvailableTime(timeString);
   };
@@ -80,7 +72,10 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
         event_location: eventLocation,
         time_duration: timeDuration,
         selected_week_days: selectedWeekDays,
-        available_time: availableTime,
+        available_time: [
+          moment(availableTime[0], ["h:mm A"]).format("HH:mm"),
+          moment(availableTime[1], ["h:mm A"]).format("HH:mm"),
+        ],
         user_name: user?.user_name,
         uid: user?.uid,
         user_image: user?.user_image,
@@ -164,19 +159,11 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
         <div className="my-4">
           <div className="d-flex align-items-center gap-3 mb-2">
             <h5 className="card-title">Available Hours</h5>
-            <Tooltip title="Change the current time hour">
-              <button
-                onClick={toggleTimeHour}
-                className="btn btn-sm btn-warning mb-2"
-              >
-                {timeHour}h
-              </button>
-            </Tooltip>
           </div>
           <TimePicker.RangePicker
             onChange={getAbailableTimeRange}
-            format={`h:mm ${timeHour === "12" ? "a" : ""}`}
-            defaultValue={[dayjs("10:00", "HH:mm"), dayjs("19:00", "HH:mm")]}
+            format={"h:mm A"}
+            defaultValue={[dayjs("10.00", "HH:mm"), dayjs("19.00", "HH:mm")]}
             size="large"
           />
           {/* <small className="px-3">

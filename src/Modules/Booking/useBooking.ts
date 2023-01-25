@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 
 const useBooking = (event) => {
-  const { selected_week_days } = event;
+  // const { selected_week_days } = event;
   const [isDateActive, setIsDateActive] = useState(false);
   const [selectedDate, onDateChange] = useState(new Date());
+  const times = ["10:00 am", "11:00 am", "12:00 pm", "1:00 pm", "2:00 pm"];
   const weekDays = [
     "Sunday",
     "Monday",
@@ -28,16 +29,16 @@ const useBooking = (event) => {
   };
 
   // get missing week days
-  function getMissingWeekDays(selected_week_days: string | string[]) {
+  function getMissingWeekDays(week_days: string | string[]): string[] {
     let missDays = [];
     weekDays.map((day, index) => {
-      if (selected_week_days.includes(day)) return;
+      if (week_days.includes(day)) return;
       return missDays.push(index);
     });
     return missDays;
   }
 
-  const notAvailableDays = getMissingWeekDays(selected_week_days); //return array
+  const notAvailableDays = getMissingWeekDays(event?.selected_week_days); //return array
 
   // Make Date slot disable function
   function disableDate(date) {
@@ -68,6 +69,7 @@ const useBooking = (event) => {
     clndrEnableTileContentHtml,
     disableDate,
     selectedDate,
+    times
   };
 };
 

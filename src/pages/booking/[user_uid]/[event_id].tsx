@@ -8,11 +8,22 @@ const EventPreviewPage = ({ event, ctx }) => {
 
   return (
     <div>
-      <h1>
-        User id : {ctx.user_uid} Event Id: {ctx.event_id}
-      </h1>
+      <div className="card w-25">
+        <div className="card-header">
+          <h4 className="card-title">Event data</h4>
+        </div>
+        <div className="card-body">
+        <p>
+        User id : <strong>{ctx.user_uid}</strong> <br />
+        Event Id: <strong>{ctx.event_id}</strong> <br />
+        Available time will Start {event?.available_time[0]} End{" "}
+        {event?.available_time[1]} <br />
+        Selected week days : {event?.selected_week_days.join(',')}
+      </p>
+        </div>
+      </div>
       <Clock />
-      <Booking event={event}/>
+      <Booking event={event} />
     </div>
   );
 };

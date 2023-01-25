@@ -1,8 +1,6 @@
-// import { Calendar } from "antd";
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { useSelector } from "react-redux";
 import useBooking from "./useBooking";
 
 const Booking = ({ event }) => {
@@ -14,17 +12,13 @@ const Booking = ({ event }) => {
     clndrEnableTileContentHtml,
     disableDate,
     selectedDate,
+    times,
   } = useBooking(event);
   const [activeBtn, setActiveBtn] = useState(null);
-  const { user } = useSelector((state: any) => state.auth_user);
 
   const checkActiveBtn = (i: number) => {
     setActiveBtn(i);
   };
-
-  // console.log("selected day -> ", selectedDate, "current Date -> ", new Date());
-
-  const times = ["10:00 am", "11:00 am", "12:00 pm", "1:00 pm", "2:00 pm"];
 
   return (
     <section>
