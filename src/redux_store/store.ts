@@ -3,32 +3,6 @@ import { createWrapper } from "next-redux-wrapper";
 import authReducer from "../Modules/Auth/AuthSlice";
 import dashboardReducer from "../Modules/Dashboard/dashboardSlice";
 
-// const ntificationSlice = () => ({
-//   name: "notification",
-//   initialState: {
-//     isOpen : false,
-//   },
-//   reducers: {
-//     notify : (state, action) =>{
-//       state.isOpen = action.payload;
-//     }
-//   },
-// })
-
-// const store = configureStore({
-//   reducer: {
-//     auth_user: authReducer,
-//     dashboard: dashboardSlice,
-//     // notification: ntificationSlice,
-//   },
-//   middleware: (getDefaultMiddleware) =>
-//     getDefaultMiddleware({
-//       serializableCheck: false,
-//     }),
-// });
-
-// export default store;
-
 const makeStore = () =>
   configureStore({
     reducer: {

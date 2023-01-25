@@ -3,7 +3,7 @@ import { Select, Checkbox, Tooltip, TimePicker } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { setSingleEvent } from "../dashboardSlice";
 import { db } from "../../../firebase/firebase_config";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import dayjs from "dayjs";
 import moment from "moment";
 
@@ -26,7 +26,7 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
     "Friday",
     "Saturday",
   ];
-  const [selectedWeekDay, setSelectedWeekDay] = useState(weekDays);
+  const [selectedWeekDays, setSelectedWeekDays] = useState(weekDays);
   const [timeHour, setTimeHout] = useState("12");
   const [availableTime, setAvailableTime] = useState([
     moment("10:00", "HH:mm").format("LT"),
@@ -35,6 +35,10 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
   console.log("available time ", availableTime);
   // console.log('Day js', dayjs().format());
   // console.log('Moment js', moment().format('Lt'));
+  console.log("available time am pm to 24h -> ", [
+    moment("10:00 am", ["h:mm A"]).format("HH:mm"),
+    moment("7:00 pm", ["h:mm A"]).format("HH:mm"),
+  ]);
 
   useEffect(() => {
     eventNameRef.current.focus();
@@ -49,7 +53,7 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
   };
 
   const getAvailableWeekDays = (list) => {
-    setSelectedWeekDay(list);
+    setSelectedWeekDays(list);
   };
 
   const toggleTimeHour = () => {
@@ -71,14 +75,15 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
     try {
       const createEventFormData = {
         id: Date.now().toString(),
-        createdAt: Timestamp.fromDate(new Date()),
-        eventName,
-        eventLocation,
-        timeDuration,
-        selectedWeekDay,
-        availableTime,
+        created_at: new Date().toString(),
+        event_name: eventName,
+        event_location: eventLocation,
+        time_duration: timeDuration,
+        selected_week_days: selectedWeekDays,
+        available_time: availableTime,
         user_name: user?.user_name,
         uid: user?.uid,
+        user_image: user?.user_image,
       };
 
       const eventRef = doc(
@@ -183,13 +188,13 @@ const CreateEventBox = ({ handleCreateEventCancel }) => {
           <div className="d-flex align-items-center gap-3 mb-2 mt-4">
             <h5 className="card-title mb-3">
               Available Days{" "}
-              <span className="text-success">{selectedWeekDay.length}</span>
+              <span className="text-success">{selectedWeekDays.length}</span>
             </h5>
           </div>
           <div className="_ant_week_checkbox">
             <CheckboxGroup
               options={weekDays}
-              value={selectedWeekDay}
+              value={selectedWeekDays}
               onChange={getAvailableWeekDays}
             />
           </div>

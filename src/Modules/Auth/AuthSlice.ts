@@ -19,23 +19,19 @@ const authSlice = createSlice({
       state.user.user_image = payload?.photoURL;
       state.user.uid = payload?.uid;
     },
-    setUserLoading: (state, { payload }) => {
-      state.isUserLoading = payload;
+  },
+  extraReducers: {
+    [HYDRATE]: (state, action) => {
+      console.log("HYDRATE", state, action.payload);
+      return {
+        ...state,
+        ...action.payload.auth_user,
+      };
     },
   },
-  // extraReducers: (builder) => {
-  //   builder.addCase(HYDRATE, (state, action) => {
-  //     const nextState = {
-  //       ...state, // use previous state
-  //       ...action, // apply delta from hydration
-  //     };
-  //     return nextState;
-  //   });
-  // },
 });
 
-
-export const { setUser, setUserLoading } = authSlice.actions;
+export const { setUser } = authSlice.actions;
 export const selectAuth = (state: any) => state.auth_user;
 
 export default authSlice.reducer;

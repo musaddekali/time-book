@@ -1,56 +1,28 @@
-import { useState } from "react";
-import { deleteDoc, doc } from "firebase/firestore";
-import { useDispatch, useSelector } from "react-redux";
-import { db } from "../../../firebase/firebase_config";
-import { handleEventDelete } from "../dashboardSlice";
 import Link from "next/link";
+import useDashboard from "../useDashboard";
 
 const EventCard = ({ event }) => {
-  const { id, eventName, eventLocation, timeDuration, createdAt } = event;
-  const [isDeleting, setIsDeleting] = useState(false);
-  const dispatch = useDispatch();
-  const { user } = useSelector((state: any) => state.auth_user);
-
-  const timeLength = (minutes: number) => {
-    if (minutes > 59) {
-      return minutes / 60 + " Hour";
-    }
-    return minutes + " Minutes";
-  };
-
-  const handleDelete = async () => {
-    if (window.confirm("Do you want to delete?")) {
-      setIsDeleting(true);
-      try {
-        const eventRef = doc(db, "events", user?.uid, "event_list", id);
-        await deleteDoc(eventRef);
-        dispatch(handleEventDelete(id));
-        setIsDeleting(false);
-      } catch (error) {
-        setIsDeleting(false);
-        console.log("Event delete error ", error);
-      }
-    }
-  };
+  const { id, event_name, event_location, time_duration, created_at, uid } = event;
+  const { handleDeleteEvent, timeLength, isEventDeleting } = useDashboard();
 
   return (
-    <div className="col-sm-6 col-md-3">
-      <div className="card">
+    <div className="col-sm-6 col-md-3 d-flex">
+      <div className="card w-100">
         <div className="card-body">
-          <Link href={`booking/${id}`} target="_blank">
+          <Link href={`booking/${uid}/${id}`} target="_blank">
             <span className="card-link mb-3 d-block">Event preview</span>
           </Link>
-          <h5 className="card-title">{eventName}</h5>
-          <p className="card-text">{eventLocation ? eventLocation : ""}</p>
-          <p className="card-text">{timeLength(timeDuration)}</p>
+          <h5 className="card-title">{event_name}</h5>
+          <p className="card-text">{event_location ? event_location : ""}</p>
+          <p className="card-text">{timeLength(time_duration)}</p>
         </div>
         <div className="card-footer d-flex gap-3">
           <button className="btn btn-sm btn-outline-success">Copy Link</button>
           <button
-            onClick={handleDelete}
+            onClick={() => handleDeleteEvent(id)}
             className="btn btn-sm btn-outline-danger"
           >
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isEventDeleting ? "Deleting..." : "Delete"}
           </button>
         </div>
       </div>

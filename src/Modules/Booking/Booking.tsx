@@ -3,88 +3,20 @@ import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useSelector } from "react-redux";
+import useBooking from "./useBooking";
 
-const event_data = {
-  event_name: "30 min Talk about job",
-  event_location: "Phone",
-  event_duration: 30,
-  selected_week_days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
-  created_at: new Date("2023-01-10").toString(),
-};
-
-const {
-  event_name,
-  event_location,
-  event_duration,
-  selected_week_days,
-  created_at,
-} = event_data;
-
-const Booking = () => {
-  const [selectedDate, onDateChange] = useState(new Date());
+const Booking = ({ event }) => {
+  const {
+    isDateActive,
+    handleIsDateActive,
+    onDateChange,
+    timeLength,
+    clndrEnableTileContentHtml,
+    disableDate,
+    selectedDate,
+  } = useBooking(event);
   const [activeBtn, setActiveBtn] = useState(null);
   const { user } = useSelector((state: any) => state.auth_user);
-  const [isDateActive, setIsDateActive] = useState(false);
-
-  const handleIsDateActive = () => {
-    console.log(selectedDate);
-    setIsDateActive(true);
-  };
-
-  // minute convertar
-  const timeLength = (minutes: number) => {
-    if (minutes > 59) {
-      return minutes / 60 + " Hour";
-    }
-    return minutes + " Minutes";
-  };
-
-  // get missing week days
-  function getMissingWeekDays(selected_week_days: string | string[]) {
-    const weekDays = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-
-    let missDays = [];
-
-    weekDays.map((day, index) => {
-      if (selected_week_days.includes(day)) return;
-      return missDays.push(index);
-    });
-
-    return missDays;
-  }
-
-  const notAvailableDays = getMissingWeekDays(selected_week_days); //return array
-  // console.log("missing days -> ", notAvailableDays);
-  // console.log("selected days -> ", selectedDate);
-
-  // Make Date slot disable function
-  function disableDate(date) {
-    const d = date;
-    const clndrDay = d.getDay();
-    if (notAvailableDays.includes(clndrDay)) {
-      // console.log("disable day", d);
-      return true;
-    }
-  }
-
-  // set calendar tileContent
-  function clndrEnableTileContentHtml(date) {
-    const d = date;
-    const clndrDay = d.getDay();
-    if (notAvailableDays.includes(clndrDay) || date < new Date()) return;
-    // if (date < new Date()) return;
-    return <span className="_calendar_active_date_dot" />;
-  }
-
-  // console.log("demo-book-data-> ", data);
 
   const checkActiveBtn = (i: number) => {
     setActiveBtn(i);
@@ -102,7 +34,7 @@ const Booking = () => {
           <div className="col-md-4 d-flex pe-0">
             <div className="border w-100 h-100 p-4 rounded">
               <div>
-                {user?.user_image && (
+                {event?.user_image && (
                   <img
                     className="rounded rounded-circle mb-3 shadow"
                     style={{
@@ -110,20 +42,20 @@ const Booking = () => {
                       width: "40px",
                       objectFit: "cover",
                     }}
-                    src={user?.user_image}
-                    alt={user?.user_name}
+                    src={event?.user_image}
+                    alt={event?.user_name}
                   />
                 )}
               </div>
-              <h6>{user?.user_name}</h6>
-              <h3>{event_name}</h3>
+              <h6>{event?.user_name}</h6>
+              <h3>{event?.event_name}</h3>
               <p>
                 <strong>Time: </strong>
-                <span>{timeLength(event_duration)}</span>
+                <span>{timeLength(event?.time_duration)}</span>
               </p>
               <p>
                 <strong>Type: </strong>
-                <span>{event_location}</span>
+                <span>{event?.event_location}</span>
               </p>
             </div>
           </div>
@@ -140,7 +72,10 @@ const Booking = () => {
                       return disableDate(date) || date < new Date();
                     }}
                     tileContent={({ activeStartDate, date, view }) => {
-                      return clndrEnableTileContentHtml(date);
+                      return clndrEnableTileContentHtml(
+                        date,
+                        <span className="_calendar_active_date_dot" />
+                      );
                     }}
                     // onActiveStartDateChange={({ action, activeStartDate, value, view }) => alert('New view is:')}
                     onChange={onDateChange}
